@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { Helmet } from 'react-helmet';
 import * as L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import './App.css'
@@ -108,43 +109,49 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <div className="sidebar">
-        <h1>🗺️ Route Loop Generator</h1>
-        <input 
-          value={address} 
-          onChange={(e) => setAddress(e.target.value)} 
-          placeholder="Adresse (ex: Paris, France)"
-        />
-        <input 
-          type="number" 
-          value={distance} 
-          onChange={(e) => setDistance(e.target.value)} 
-          placeholder="Distance"
-          min="1" max="50" step="0.5"
-        />
+    <>
+      <Helmet>
+        <title>🗺️ Route Shuffle</title>
+        <meta name="description" content="Generate your own loop !" />
+      </Helmet>
+      <div className="main-page">
+        <div className="sidebar">
+          <h1>🗺️ Route Loop Generator</h1>
+          <input 
+            value={address} 
+            onChange={(e) => setAddress(e.target.value)} 
+            placeholder="Adresse (ex: Paris, France)"
+          />
+          <input 
+            type="number" 
+            value={distance} 
+            onChange={(e) => setDistance(e.target.value)} 
+            placeholder="Distance"
+            min="1" max="50" step="0.5"
+          />
 
-        <button className="add-btn" onClick={addLoop}>
-          Générer 3 boucles de {distance} km
-        </button>
-        <div className="status">{message}</div>
-        <div className="loops-count">📍 Boucles: {loops.length}</div>
-        <div className="loops-list">
-          {loops.slice(-6).map(loop => (
-            <div key={loop.id} className="loop-item" style={{ borderLeftColor: loop.color }}>
-              <div>
-                <div className="loop-title">{loop.address}</div>
-                <div className="loop-distances">
-                  🎯 {loop.distance.toFixed(1)}km → 📏 {loop.actualDistance}km
+          <button className="add-btn" onClick={addLoop}>
+            Générer 3 boucles de {distance} km
+          </button>
+          <div className="status">{message}</div>
+          <div className="loops-count">📍 Boucles: {loops.length}</div>
+          <div className="loops-list">
+            {loops.slice(-6).map(loop => (
+              <div key={loop.id} className="loop-item" style={{ borderLeftColor: loop.color }}>
+                <div>
+                  <div className="loop-title">{loop.address}</div>
+                  <div className="loop-distances">
+                    🎯 {loop.distance.toFixed(1)}km → 📏 {loop.actualDistance}km
+                  </div>
                 </div>
+                <div className="loop-color" style={{ backgroundColor: loop.color }}></div>
               </div>
-              <div className="loop-color" style={{ backgroundColor: loop.color }}></div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
+        <div className="map-container" ref={mapDivRef} />
       </div>
-      <div className="map-container" ref={mapDivRef} />
-    </div>
+    </>
   )
 }
 
